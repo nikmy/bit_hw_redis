@@ -1,0 +1,54 @@
+version: '3.7'
+services:
+  redis-single:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  redis-cluster:
+    image: redis
+    command: redis-cli --cluster create 10.0.0.31:6373 10.0.0.32:6374 10.0.0.33:6375 --cluster-replicas 1 --cluster-yes
+    networks:
+      app_subnet:
+        ipv4_address: 10.0.100.30
+    depends_on:
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+  redis-node-1:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - '6373:6373'
+    volumes:
+      - ./docker/redis-node-1.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 10.0.100.31
+  redis-node-2:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - '6374:6374'
+    volumes:
+      - ./docker/redis-node-2.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 10.0.100.32
+  redis-node-3:
+    image: redis
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - '6375:6375'
+    volumes:
+      - ./docker/redis-node-3.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      app_subnet:
+        ipv4_address: 10.0.100.33
+
+networks:
+  app_subnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.100.0/24
