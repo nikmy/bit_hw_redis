@@ -25,7 +25,7 @@ func main() {
 	}
 	defer file.Close()
 
-	data := make([]Entry, 0, 10_000)
+	data := make([]Entry, 0, 200_000)
 	for d := json.NewDecoder(file); ; {
 		var next Entry
 		err = d.Decode(&next)

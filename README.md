@@ -18,7 +18,7 @@ go build prof
 ## Golang Implementations Details
 
 - `HSET`/`HGET`, `ZADD`/`ZSCORE`, `LPUSH`/`LPOP`, `SET`/`GET` operations
-- pipelining for 1 RTT per operation
+- pipelining for 1 RTT per whole dataset operation
 - `zap` logging
 
 ## Raw Logs
@@ -47,11 +47,11 @@ go build prof
 2023-04-24T22:14:37.655+0300    INFO    prof/cluster.go:113     LPOP time: 0.3 s
 2023-04-24T22:14:39.130+0300    INFO    prof/cluster.go:123     SET time: 1.3 s
 2023-04-24T22:14:39.293+0300    INFO    prof/cluster.go:132     GET time: 0.2 s
-
 ```
 
 ## Summary
 
-- `GET` and `LPUSH` requests can be parallelized between nodes (x3 better performance for cluster)
+- `GET` requests can be balanced between nodes (x3 better performance for cluster)
 - `HSET` / `HGET` slowdown >10 for cluster
 - `ZADD` / `ZSCORE` x5 slowdown
+- Faster `LPUSH` and the same `LPOP` with cluster
